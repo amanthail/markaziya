@@ -126,7 +126,17 @@ html[dir=ltr] .card{inset-inline-start:max(16px,env(safe-area-inset-left,0px))}
 .steps .sum::before,.steps .nonum::before{content:none}
 .steps .sum,.steps .nonum{counter-increment:none}
 .card a{color:var(--accent)}
-.toast{position:fixed;top:calc(96px + env(safe-area-inset-top,0px));max-width:calc(100% - 32px);text-align:center;box-sizing:border-box;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;z-index:9}
+.routebar{position:fixed;top:calc(96px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:10px;background:var(--paper);border-radius:28px;padding:6px 6px 6px 14px;box-shadow:var(--shadow);max-width:calc(100% - 32px);box-sizing:border-box}
+html[dir=rtl] .routebar{padding:6px 6px 6px 6px}
+.routebar .dot{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;overflow:hidden}
+.routebar .dot svg{width:18px;height:18px}.routebar .dot.logo img{width:100%;height:100%;object-fit:cover}
+.routebar .rb-t{display:flex;flex-direction:column;min-width:0;line-height:1.3}
+.routebar .rb-t b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.routebar .rb-t small{font-size:12px;color:var(--accent);font-weight:700;white-space:nowrap}
+.routebar{min-width:220px}
+.routebar .rb-x{border:0;background:var(--ground);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none;margin-inline-start:6px}
+.routebar .rb-x svg{width:14px;height:14px}
+.toast{position:fixed;top:calc(156px + env(safe-area-inset-top,0px));max-width:calc(100% - 32px);text-align:center;box-sizing:border-box;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;z-index:9}
 
 @media (max-width:640px){
   .tab{display:none}
@@ -876,6 +886,7 @@ function viewFor(p){
 
 /* ---------- UI ---------- */
 const card=document.getElementById('card');
+const routeBar=document.createElement('div');routeBar.className='routebar';routeBar.hidden=true;document.body.appendChild(routeBar);
 let selected=null,activeCat=null;
 function tint(p){places.filter(o=>o.shop).forEach(o=>o.mesh.material.color.set(o===p?'#d9b273':kioskBody))}
 function select(p,fromHash){
@@ -893,7 +904,14 @@ function renderCard(p,withRoute){
     let x1=1e9,x2=-1e9,z1=1e9,z2=-1e9;routePts.forEach(q=>{x1=Math.min(x1,q.x);x2=Math.max(x2,q.x);z1=Math.min(z1,q.z);z2=Math.max(z2,q.z)});
     const cx=(x1+x2)/2,cz=(z1+z2)/2,span=Math.max(x2-x1,z2-z1)+40;
     flyTo(new THREE.Vector3(cx+span*.25,span*.95+40,cz+span*.85+40),new THREE.Vector3(cx,0,cz));
+    // route only: hide the card, show a slim strip with distance and a close button
+    card.hidden=true;
+    routeBar.innerHTML=`${dotHTML(p)}<span class="rb-t"><b>${pname(p)}</b><small>${Math.round(r.len)} ${t('m')} – ${mins} ${t('min')} ${t('walk')}</small></span><button type="button" class="rb-x" aria-label="✕">${svg('x','#1f2a33')}</button>`;
+    routeBar.hidden=false;routeBar.querySelector('.rb-x').onclick=closeCard;
+    requestAnimationFrame(applyOffset);
+    return;
   }
+  routeBar.hidden=true;
   card.innerHTML=`<div class="swatch" style="background:${c.c}">${p.logo?`<span class="biglogo"><img src="${p.logo}" alt=""></span>`:svg(c.i)}</div>
    <div class="hd"><h2>${pname(p)}${(lang==='ar'?p.descAr:p.descEn)?`<small class="desc">${lang==='ar'?p.descAr:p.descEn}</small>`:''}</h2>
     <button class="ic" id="shareBtn" aria-label="${t('share')}">${svg('share','#1f2a33')}</button>
@@ -905,7 +923,7 @@ function renderCard(p,withRoute){
   card.querySelector('#dirBtn').onclick=()=>{if(!start){pending=p;openStartPanel();return}renderCard(p,true)};
   card.querySelector('#shareBtn').onclick=()=>{const url=location.href.split('#')[0]+'#'+p.id;try{navigator.clipboard.writeText(url).then(()=>toast(t('copied')),()=>toast(url))}catch(e){toast(url)}};
 }
-function closeCard(){card.hidden=true;requestAnimationFrame(applyOffset);selected=null;clearRoute();places.forEach(o=>o.el.classList.remove('sel'));tint(null);try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
+function closeCard(){card.hidden=true;routeBar.hidden=true;requestAnimationFrame(applyOffset);selected=null;clearRoute();places.forEach(o=>o.el.classList.remove('sel'));tint(null);try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
 let toastT;
 function toast(msg,ms=2400){const el=document.getElementById('toast');el.textContent=msg;el.hidden=false;clearTimeout(toastT);if(ms)toastT=setTimeout(()=>el.hidden=true,ms)}
 /* ---------- where am I ---------- */
