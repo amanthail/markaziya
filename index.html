@@ -24,7 +24,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 html[dir=ltr] .brand{inset-inline-start:max(16px,env(safe-area-inset-left,0px))}
 .brand b{font-family:var(--f-brand);font-weight:800;font-size:19px;display:block;color:var(--accent)}
 .brand small{font-size:11px;color:var(--muted)}
-.brand .credit{display:block;font-size:9.5px;opacity:.75;margin-top:2px;white-space:nowrap}
+.credit{position:fixed;left:0;right:0;bottom:calc(1px + env(safe-area-inset-bottom,0px));z-index:5;text-align:center;font:500 8px/10px system-ui,sans-serif;color:#8a9097;letter-spacing:.2px;pointer-events:none;direction:ltr}
 .tab{position:fixed;top:env(safe-area-inset-top,0px);left:50%;transform:translateX(-50%);background:rgba(85,92,98,.78);color:#fff;
   padding:8px 26px 10px;border-radius:0 0 10px 10px;font-size:13px;z-index:5;white-space:nowrap}
 .clock{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));inset-inline-end:max(16px,env(safe-area-inset-left,0px));
@@ -40,6 +40,11 @@ html[dir=ltr] .tod{inset-inline-end:max(16px,env(safe-area-inset-right,0px))}
 .me{position:absolute;top:50%;transform:translateY(-50%);inset-inline-end:5px;display:flex;align-items:center;gap:5px;border:0;border-radius:6px;background:var(--accent);color:#fff;padding:6px 10px;font-size:12.5px;font-weight:600}
 .me svg{width:15px;height:15px;position:static;transform:none;flex:none}
 .me.set{background:var(--accent-soft);color:var(--accent)}
+.askloc{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));width:min(400px,calc(100% - 32px));box-sizing:border-box;background:var(--paper);border-radius:14px;box-shadow:var(--shadow);z-index:9;padding:16px;text-align:center}
+.askloc .ic{width:44px;height:44px;border-radius:50%;background:#e8f0fe;color:#1a73e8;display:grid;place-items:center;margin:0 auto 8px}.askloc .ic svg{width:24px;height:24px}
+.askloc b{display:block;font-size:15px;margin-bottom:4px}.askloc p{margin:0 0 12px;font-size:12.5px;color:var(--muted);line-height:1.6}
+.askloc .row{display:flex;gap:8px}.askloc button{flex:1;height:40px;border-radius:10px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.askloc .yes{background:#1a73e8;color:#fff;border:0}.askloc .no{background:var(--ground);color:var(--ink);border:1px solid var(--line)}
 .startp{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));width:min(440px,calc(100% - 32px));background:var(--paper);border-radius:12px;box-shadow:var(--shadow);z-index:8;padding:14px;max-height:58vh;overflow:auto;box-sizing:border-box}
 .startp h3{margin:0 0 10px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
 .startp h3 button{border:0;background:var(--ground);width:28px;height:28px;border-radius:50%}
@@ -169,7 +174,8 @@ html[dir=rtl] .routebar{padding:6px 6px 6px 6px}
 <canvas id="scene" aria-label="خريطة ثلاثية الأبعاد للمجمع"></canvas>
 <div id="markers"></div>
 
-<div class="brand"><b id="tBrand">المنطقة المركزية</b><small id="tCity">مدينة حائل</small><small class="credit" id="tCredit">تصميم وتطوير: هديل البراك © ٢٠٢٦</small><span class="demo" id="tDemo" hidden>بيانات تجريبية</span></div>
+<div class="credit">© 2026 Hadeel Albarrak</div>
+<div class="brand"><b id="tBrand">المنطقة المركزية</b><small id="tCity">مدينة حائل</small><span class="demo" id="tDemo" hidden>بيانات تجريبية</span></div>
 <div class="tab" id="tTab">17 محل</div>
 <div class="clock" id="clock">--:--</div>
 <button class="tod" id="todBtn" aria-pressed="false" aria-label="نهار / ليل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
@@ -345,11 +351,11 @@ let lang='ar';
 const T={
  ar:{brand:'المنطقة المركزية',city:'مدينة حائل',demo:'أسماء المحلات تجريبية',tab:'17 محل',search:'بحث',home:'الرئيسية',lang:'English',
      dir:'الاتجاهات',share:'مشاركة',cat:'التصنيف',unit:'رقم المحل',hours:'الدوام',here:'أنت هنا',nores:'لا توجد نتائج',
-     copied:'تم نسخ الرابط',gmaps:'افتح الموقع في خرائط قوقل',start:'من مكانك اتجه نحو',me:'موقعي',meSet:'غيّر مكاني',whereTitle:'من وين تبدأ؟',gps:'استخدم موقعي الحالي',gpsSub:'يحتاج إذن الموقع من جهازك',tapOpt:'حدد مكانك على الخريطة',tapSub:'اضغط على المكان اللي أنت فيه',orPick:'أو اختر أقرب مكان لك:',tapHint:'اضغط على مكانك في الخريطة',nogps:'ما قدرنا نوصل لموقعك، حدد مكانك على الخريطة',far:'أنت بعيد عن الساحة، حدد مكانك يدوياً',gate:'البوابة الجنوبية الشرقية',startSet:'تم تحديد مكانك:',mapPoint:'نقطة على الخريطة',myGps:'موقعي',credit:'تصميم وتطوير: هديل البراك © ٢٠٢٦',sec:'ثانية',left:'باقي',arrived:'لقد وصلت',follow:'تابعني',walk1:'امشِ',tr:'ثم انعطف يمين',tl:'ثم انعطف يسار',arrive:'الوجهة أمامك:',m:'م',min:'دقيقة',walk:'مشي',
+     copied:'تم نسخ الرابط',gmaps:'افتح الموقع في خرائط قوقل',start:'من مكانك اتجه نحو',me:'موقعي',meSet:'غيّر مكاني',whereTitle:'من وين تبدأ؟',gps:'استخدم موقعي الحالي',gpsSub:'يحتاج إذن الموقع من جهازك',tapOpt:'حدد مكانك على الخريطة',tapSub:'اضغط على المكان اللي أنت فيه',orPick:'أو اختر أقرب مكان لك:',tapHint:'اضغط على مكانك في الخريطة',nogps:'ما قدرنا نوصل لموقعك، حدد مكانك على الخريطة',far:'أنت بعيد عن الساحة، حدد مكانك يدوياً',gate:'البوابة الجنوبية الشرقية',startSet:'تم تحديد مكانك:',mapPoint:'نقطة على الخريطة',myGps:'موقعي',askT:'استخدام موقعك الحالي؟',askS:'نحدد مكانك على الخريطة ونمشي معك خطوة بخطوة لين توصل للمحل',askYes:'استخدم موقعي',askNo:'لاحقاً',askOff:'الموقع مقفل',retry:'حاول مرة ثانية',ok:'حسناً',locating:'جاري تحديد موقعك… قد يأخذ لين ٢٠ ثانية',denied:'المتصفح ممنوع من موقعك. في الآيفون: الإعدادات ← الخصوصية والأمان ← خدمات الموقع ← مواقع Safari ← أثناء الاستخدام، وفعّل الموقع الدقيق. ثم حدّث الصفحة',sec:'ثانية',left:'باقي',arrived:'لقد وصلت',follow:'تابعني',walk1:'امشِ',tr:'ثم انعطف يمين',tl:'ثم انعطف يسار',arrive:'الوجهة أمامك:',m:'م',min:'دقيقة',walk:'مشي',
      dirs:['الشرق','الجنوب الشرقي','الجنوب','الجنوب الغربي','الغرب','الشمال الغربي','الشمال','الشمال الشرقي']},
  en:{brand:'Central Area',city:'Hail City',demo:'Shop names are samples',tab:'17 shops',search:'Search',home:'Home',lang:'العربية',
      dir:'Directions',share:'Share',cat:'Category',unit:'Shop no.',hours:'Hours',here:'You are here',nores:'No results',
-     copied:'Link copied',gmaps:'Open in Google Maps',start:'From where you are, head',me:'My location',meSet:'Change',whereTitle:'Where are you starting from?',gps:'Use my current location',gpsSub:'Needs location permission',tapOpt:'Pick your spot on the map',tapSub:'Tap where you are standing',orPick:'Or choose the nearest place:',tapHint:'Tap your location on the map',nogps:'Could not get your location, pick it on the map',far:'You are away from the plaza, pick your spot manually',gate:'South-east gate',startSet:'Starting from:',mapPoint:'Point on the map',myGps:'My location',credit:'Designed & developed by Hadeel Albarrak © 2026',sec:'sec',left:'',arrived:'You have arrived',follow:'Follow me',walk1:'Walk',tr:'then turn right',tl:'then turn left',arrive:'Your destination is ahead:',m:'m',min:'min',walk:'walk',
+     copied:'Link copied',gmaps:'Open in Google Maps',start:'From where you are, head',me:'My location',meSet:'Change',whereTitle:'Where are you starting from?',gps:'Use my current location',gpsSub:'Needs location permission',tapOpt:'Pick your spot on the map',tapSub:'Tap where you are standing',orPick:'Or choose the nearest place:',tapHint:'Tap your location on the map',nogps:'Could not get your location, pick it on the map',far:'You are away from the plaza, pick your spot manually',gate:'South-east gate',startSet:'Starting from:',mapPoint:'Point on the map',myGps:'My location',askT:'Use your current location?',askS:'We show where you are and guide you step by step to the shop',askYes:'Use my location',askNo:'Not now',askOff:'Location is off',retry:'Try again',ok:'OK',locating:'Finding your location… this can take up to 20 s',denied:'Location is blocked for this browser. Allow it in your phone settings (Location Services → your browser → While Using), then reload the page',sec:'sec',left:'',arrived:'You have arrived',follow:'Follow me',walk1:'Walk',tr:'then turn right',tl:'then turn left',arrive:'Your destination is ahead:',m:'m',min:'min',walk:'walk',
      dirs:['east','south-east','south','south-west','west','north-west','north','north-east']}
 };
 const t=k=>T[lang][k];
@@ -996,12 +1002,13 @@ function onGeo(ps){
   // a fix that lands in a bed, pool or building is moved to the nearest walkway within the GPS error
   const sn=navSnap(r.x,r.z,Math.min(8,acc)/M_PER_U);if(sn){r.x=sn.x;r.z=sn.z}
   // smoothing: precise fixes count fully, rough ones only partly
-  if(live.on){const k=Math.min(1,Math.max(.3,8/(acc+4)));r.x=live.tx+(r.x-live.tx)*k;r.z=live.tz+(r.z-live.tz)*k}
+  const rawMove=Math.hypot(r.x-live.tx,r.z-live.tz);
+  if(live.on){const k=Math.min(1,Math.max(.55,12/(acc+6)));r.x=live.tx+(r.x-live.tx)*k;r.z=live.tz+(r.z-live.tz)*k}
   const dx=r.x-live.tx,dz=r.z-live.tz,moved=Math.hypot(dx,dz);
   const hd=ps.coords.heading;
   if(hd!=null&&!isNaN(hd)&&(ps.coords.speed||0)>.4)live.dir=Math.atan2(-Math.cos(hd*D),Math.sin(hd*D));else if(moved>1.5&&live.on)live.dir=Math.atan2(dz,dx);
   here.el.classList.toggle('dir',live.dir!=null);
-  if(live.on&&moved<.7)return;
+  if(live.on&&rawMove<.4)return;
   live.tx=r.x;live.tz=r.z;start.x=r.x;start.z=r.z;
   if(!live.on){live.on=true;here.x=r.x;here.z=r.z;here.el.classList.add('live')}
   wake();
@@ -1038,6 +1045,7 @@ function openStartPanel(){
   spEl.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{const p=quick[+b.dataset.i];setStart(p.door||p,lang==='ar'?p.ar:p.en)});
 }
 function setStart(pt,label){
+  closeAsk();
   if(label!==t('myGps')){live.on=false;live.dir=null;here.el.classList.remove('live','dir')}
   start={x:pt.x,z:pt.z,label};here.x=pt.x;here.z=pt.z;here.el.hidden=false;
   here.el.querySelector('.lb').textContent=t('here');
@@ -1049,31 +1057,54 @@ function setStart(pt,label){
   else flyTo(new THREE.Vector3(pt.x+40,70,pt.z+80),new THREE.Vector3(pt.x,0,pt.z));
 }
 function startTap(){closeStartPanel();tapMode=true;toast(t('tapHint'),0)}
+// ask the phone for the visitor's position: precise GPS first (it can take 10–30 s outdoors),
+// then a quicker rough fix; the live watch keeps refining it afterwards
+function startWatch(){try{if(geoWatch==null)geoWatch=navigator.geolocation.watchPosition(onGeo,()=>{},{enableHighAccuracy:true,maximumAge:0})}catch(e){}}
+function locate(onOk,onFail){
+  if(!navigator.geolocation||!window.isSecureContext&&location.protocol!=='file:'){onFail({code:0});return}
+  let got=false;const finish=()=>{got=true;clearTimeout(tm)};
+  const ok=pos=>{if(got)return;finish();onOk(pos)};
+  const rough=e=>{if(got)return;if(e&&e.code===1){finish();onFail(e);return}
+    try{navigator.geolocation.getCurrentPosition(ok,e2=>{if(got)return;finish();onFail(e2||e)},{enableHighAccuracy:false,timeout:15000,maximumAge:60000})}catch(x){finish();onFail(e)}};
+  const tm=setTimeout(()=>rough({code:3}),22000);
+  try{navigator.geolocation.getCurrentPosition(ok,rough,{enableHighAccuracy:true,timeout:20000,maximumAge:0})}catch(e){rough({code:2})}
+}
 function useGPS(){
-  closeStartPanel();
-  let done=false;const fail=()=>{if(done)return;done=true;toast(t('nogps'));startTap()};
-  if(!navigator.geolocation){fail();return}
-  const fallback=setTimeout(fail,9000);
-  try{navigator.geolocation.getCurrentPosition(pos=>{
-      if(done)return;done=true;clearTimeout(fallback);
-      const q=geoToXZ(pos.coords.latitude,pos.coords.longitude);
-      if(Math.hypot(q.x-60,q.z-30)>650){toast(t('far'));startTap();return}
-      live.tx=q.x;live.tz=q.z;live.on=true;here.el.classList.add('live');setStart(q,t('myGps'));
-      try{if(geoWatch==null)geoWatch=navigator.geolocation.watchPosition(onGeo,()=>{},{enableHighAccuracy:true,maximumAge:0})}catch(e){}
-    },()=>{clearTimeout(fallback);fail()},{enableHighAccuracy:true,timeout:8000,maximumAge:0})}catch(e){clearTimeout(fallback);fail()}
+  closeStartPanel();toast(t('locating'),0);
+  locate(pos=>{
+    const q=geoToXZ(pos.coords.latitude,pos.coords.longitude);
+    if(Math.hypot(q.x-60,q.z-30)>650){startTap();toast(t('far'),0);return}
+    live.tx=q.x;live.tz=q.z;live.acc=pos.coords.accuracy||20;live.on=true;here.el.classList.add('live');setStart(q,t('myGps'));startWatch();
+  },e=>{startTap();toast((e&&e.code===1?t('denied'):t('nogps'))+' — '+t('tapHint'),0)});
 }
 document.getElementById('meBtn').onclick=()=>{pending=null;openStartPanel()};
 // try to locate the visitor automatically on open (works when hosted on your own site; silently skipped inside Claude)
 function autoLocate(){
   if(!navigator.geolocation||location.hash.indexOf('#from-')===0)return;
-  try{navigator.geolocation.getCurrentPosition(pos=>{
+  locate(pos=>{
     if(start)return;const q=geoToXZ(pos.coords.latitude,pos.coords.longitude);
     if(Math.hypot(q.x-60,q.z-30)>650)return;
-    live.tx=q.x;live.tz=q.z;live.on=true;here.el.classList.add('live');setStart(q,t('myGps'));
-    try{geoWatch=navigator.geolocation.watchPosition(onGeo,()=>{},{enableHighAccuracy:true,maximumAge:0})}catch(e){}
-  },()=>{},{enableHighAccuracy:true,timeout:10000,maximumAge:0})}catch(e){}
+    live.tx=q.x;live.tz=q.z;live.acc=pos.coords.accuracy||20;live.on=true;here.el.classList.add('live');setStart(q,t('myGps'));startWatch();
+  },()=>{});
 }
-setTimeout(autoLocate,600);
+// on opening: ask the visitor (one tap) to use their current location – the tap lets the phone show its own permission prompt
+let askEl=null;
+function closeAsk(){if(askEl){askEl.remove();askEl=null}}
+function showAsk(state){
+  if(start||askEl)return;
+  askEl=document.createElement('div');askEl.className='askloc';askEl.setAttribute('role','dialog');
+  const denied=state==='denied';
+  askEl.innerHTML=`<span class="ic">${GPSI}</span><b>${t(denied?'askOff':'askT')}</b><p>${t(denied?'denied':'askS')}</p>
+   <div class="row"><button type="button" class="yes">${t(denied?'retry':'askYes')}</button><button type="button" class="no">${t(denied?'ok':'askNo')}</button></div>`;
+  document.body.appendChild(askEl);
+  const y=askEl.querySelector('.yes');if(y)y.onclick=()=>{closeAsk();useGPS()};
+  askEl.querySelector('.no').onclick=closeAsk;
+}
+function askLocation(){
+  if(!navigator.geolocation||location.hash.indexOf('#from-')===0||start)return;
+  try{navigator.permissions.query({name:'geolocation'}).then(r=>{if(r.state==='granted')autoLocate();else showAsk(r.state)},()=>showAsk())}catch(e){showAsk()}
+}
+setTimeout(askLocation,700);
 const catsEl=document.getElementById('cats');
 function renderCats(){catsEl.innerHTML='';CATS.filter(c=>places.some(p=>p.cat===c.id)).forEach(c=>{const b=document.createElement('button');b.className='cat';b.type='button';b.setAttribute('aria-pressed',String(activeCat===c.id));
   b.innerHTML=`<span class="dot" style="background:${c.c}">${svg(c.i)}</span><span>${cname(c)}</span>`;b.onclick=()=>setCat(activeCat===c.id?null:c.id);catsEl.appendChild(b)})}
@@ -1106,7 +1137,7 @@ function goHome(){closeCard();flyTo(HOME_POS.clone(),HOME_T.clone())}
 document.getElementById('homeBtn').onclick=()=>setCat(null);
 function applyLang(){
   document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
-  ['brand','city','credit','demo','tab','home','lang'].forEach(k=>{const el=document.getElementById('t'+k[0].toUpperCase()+k.slice(1));if(el)el.textContent=t(k)});
+  ['brand','city','demo','tab','home','lang'].forEach(k=>{const el=document.getElementById('t'+k[0].toUpperCase()+k.slice(1));if(el)el.textContent=t(k)});
   q.placeholder=t('search');document.getElementById('tMe').textContent=start?t('meSet'):t('me');q.setAttribute('aria-label',t('search'));renderCats();labelAll();
   if(selected)renderCard(selected,!!routePts);updateClock();
 }
@@ -1142,12 +1173,12 @@ let lastWater=0;
 function loop(now){
   if(flight){const f=reduce?1:Math.min(1,(now-flight.start)/flight.ms),e=ease(f);camera.position.lerpVectors(flight.p0,flight.p1,e);controls.target.lerpVectors(flight.t0,flight.t1,e);if(f>=1)flight=null}
   controls.update();
-  if(live.on){const ex=live.tx-here.x,ez=live.tz-here.z;if(Math.abs(ex)+Math.abs(ez)>.02){here.x+=ex*.12;here.z+=ez*.12;needs=Math.max(needs,1)}}
+  if(live.on){const ex=live.tx-here.x,ez=live.tz-here.z;if(Math.abs(ex)+Math.abs(ez)>.02){here.x+=ex*.18;here.z+=ez*.18;needs=Math.max(needs,1)}}
   if(flight||(routePts&&chevrons.length))needs=Math.max(needs,1);
   if(!isMobile&&now-lastWater>100){lastWater=now;waterTexs.forEach((w,i)=>{w.offset.x=(now/1000)*.012*(i%2?1:-1);w.offset.y=(now/1000)*.006});needs=Math.max(needs,1)}
   if(needs<=0){requestAnimationFrame(loop);return}
   needs--;
-  if(routePts&&chevrons.length){const off=reduce?0:(now/1000*6)%5;chevrons.forEach((c,i)=>{const r=pointAt(Math.min(routeLen,i*5+off));c.position.set(r.p.x,r.p.y+.05,r.p.z);c.rotation.y=r.dir})}
+  if(routePts&&chevrons.length){const off=reduce?0:(now/1000*6)%5;chevrons.forEach((c,i)=>{const r=pointAt(Math.min(routeLen,i*5+off));c.position.set(r.p.x,r.p.y+.05,r.p.z);c.rotation.y=r.dir+Math.PI})}
   renderer.render(scene,camera);placeMarkers();requestAnimationFrame(loop);
 }
 applyLang();openHash();requestAnimationFrame(loop);
