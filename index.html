@@ -221,6 +221,7 @@ const ICONS={
  bed:'<path d="M3 18V6M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.8"/>',
  gov:'<path d="M3 10l9-6 9 6M5 10v9M9.5 10v9M14.5 10v9M19 10v9M3 21h18"/>',
  parking:'<path d="M8 21V3h5a5 5 0 0 1 0 10H8"/>',
+ wc:'<circle cx="7" cy="4.5" r="1.8"/><circle cx="17" cy="4.5" r="1.8"/><path d="M5.5 8h3L9.5 15H8v6H6v-6H4.5zM12 3v18M15.5 8h3l2 7h-1.8v6h-3.4v-6h-1.8z"/>',
  walk:'<circle cx="13.5" cy="4" r="2"/><path d="M9 21l2.5-6 3 2.5V21M7 12.5l2.5-4.5 4 .8 2 3 2.5.9M11.5 15l1-6"/>',
  pin:'<path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>',
  x:'<path d="M6 6l12 12M18 6L6 18"/>',
@@ -241,7 +242,8 @@ const CATS=[
  {id:'hotel',ar:'فنادق',en:'Hotels',c:'#6a5a9e',i:'bed'},
  {id:'gov',ar:'جهات حكومية',en:'Government',c:'#5b6670',i:'gov'},
  {id:'parking',ar:'المواقف',en:'Parking',c:'#3b5a8a',i:'parking'},
- {id:'walk',ar:'ممشى',en:'Walkway',c:'#5b8c3a',i:'walk'}
+ {id:'walk',ar:'ممشى',en:'Walkway',c:'#5b8c3a',i:'walk'},
+ {id:'wc',ar:'دورات مياه',en:'Restrooms',c:'#3f7fae',i:'wc'}
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
 const dotHTML=(p,cls='dot')=>p.logo?`<span class="${cls} logo"><img src="${p.logo}" alt=""></span>`:`<span class="${cls}" style="background:${CAT[p.cat].c}">${svg(CAT[p.cat].i)}</span>`;
@@ -293,6 +295,8 @@ L_('mosque2','mosque',{x:236,z:-109},16,'مسجد','Mosque',{x:219,z:-109});
 L_('baladiya','gov',P(740,670),20,'بلدية الوسط','Al-Wasat Municipality',{x:93,z:90});
 L_('emirate','gov',{x:-62,z:250},22,'إمارة منطقة حائل','Hail Region Emirate',{x:-55,z:194});
 L_('afnan','walk',{x:145.2,z:-342.2},Y+4,'ممشى عفنان','Afnan Walk',{x:90,z:-270});
+L_('wc1','wc',{x:28.90,z:134.79},Y+5.4,'دورات مياه','Restrooms',{x:28.01,z:130.04});
+L_('wc2','wc',{x:62.82,z:128.33},Y+5.4,'دورات مياه','Restrooms',{x:61.92,z:123.58});
 L_('kids','kids',{x:141.9,z:-57},Y+5,'ألعاب أطفال','Kids play area');
 L_('parkS','parking',{x:25,z:169},Y+3,'مواقف إمارة منطقة حائل ١','Hail Region Emirate parking 1');
 L_('parkNW','parking',P(300,345),Y+3,'مواقف طريق الملك عبدالعزيز','King Abdulaziz Rd parking',{x:-80,z:-66});
