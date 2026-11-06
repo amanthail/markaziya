@@ -1,4 +1,4 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>دليل المجمع التجاري</title>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>المنطقة المركزية | حائل</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap">
@@ -26,7 +26,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 html[dir=ltr] .brand{inset-inline-start:max(16px,env(safe-area-inset-left,0px))}
 .brand b{font-family:var(--f-brand);font-weight:800;font-size:19px;display:block;color:var(--accent)}
 .brand small{font-size:11px;color:var(--muted)}
-.credit{position:fixed;left:0;right:0;bottom:calc(1px + env(safe-area-inset-bottom,0px));z-index:5;text-align:center;font:500 8px/10px system-ui,sans-serif;color:#8a9097;letter-spacing:.2px;pointer-events:none;direction:ltr}
+.credit{position:fixed;left:0;right:0;bottom:calc(1px + env(safe-area-inset-bottom,0px));z-index:5;text-align:center;font:600 9.5px/11px system-ui,sans-serif;color:#2f7fb8;letter-spacing:.2px;pointer-events:none;direction:ltr}
 .tab{position:fixed;top:env(safe-area-inset-top,0px);left:50%;transform:translateX(-50%);background:rgba(85,92,98,.78);color:#fff;
   padding:8px 26px 10px;border-radius:0 0 10px 10px;font-size:13px;z-index:5;white-space:nowrap}
 .clock{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));inset-inline-end:max(16px,env(safe-area-inset-left,0px));
@@ -1165,6 +1165,11 @@ function askLocation(){
   try{navigator.permissions.query({name:'geolocation'}).then(r=>{if(r.state==='granted')autoLocate();else showAsk(r.state)},()=>showAsk())}catch(e){showAsk()}
 }
 setTimeout(askLocation,700);
+// visit counter (GoatCounter, cookieless): one small request after the map has loaded, no outside code is loaded;
+// counts only on the published site, and any failure is ignored so the map is never affected
+setTimeout(()=>{try{if(!/github\.io$/.test(location.hostname))return;
+  const q='p='+encodeURIComponent(location.pathname||'/')+'&t='+encodeURIComponent(document.title||'')+'&r='+encodeURIComponent(document.referrer||'')+'&s='+encodeURIComponent([screen.width,screen.height,devicePixelRatio||1].join(','))+'&rnd='+Math.random().toString(36).slice(2);
+  const im=new Image();im.referrerPolicy='no-referrer-when-downgrade';im.src='https://markaziya.goatcounter.com/count?'+q}catch(e){}},2000);
 const catsEl=document.getElementById('cats');
 function renderCats(){catsEl.innerHTML='';CATS.filter(c=>places.some(p=>p.cat===c.id)).forEach(c=>{const b=document.createElement('button');b.className='cat';b.type='button';b.setAttribute('aria-pressed',String(activeCat===c.id));
   b.innerHTML=`<span class="dot" style="background:${c.c}">${svg(c.i)}</span><span>${cname(c)}</span>`;b.onclick=()=>setCat(activeCat===c.id?null:c.id);catsEl.appendChild(b)})}
